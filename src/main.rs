@@ -91,49 +91,49 @@ mod tetriminos {
     struct TetriminoType([[i32; 4]; 4], Color);
     const CYAN: Color = color_u8!(0, 255, 255, 255); // Guess ill do it myself
     
-    const TETRIMINO_I: TetriminoType = ([
+    const TETRIMINO_I: TetriminoType([
         [0, 0, 0, 0],
         [1, 1, 1, 1],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
     ],CYAN);
     
-    const TETRIMINO_J: TetriminoType = ([
+    const TETRIMINO_J: TetriminoType([
         [0, 0, 1, 0],
         [0, 0, 1, 0],
         [0, 1, 1, 0],
         [0, 0, 0, 0],
     ],BLUE);
     
-    const TETRIMINO_L: TetriminoType = ([
+    const TETRIMINO_L: TetriminoType([
         [0, 1, 0, 0],
         [0, 1, 0, 0],
         [0, 1, 1, 0],
         [0, 0, 0, 0],
     ],ORANGE);
     
-    const TETRIMINO_O: TetriminoType = ([
+    const TETRIMINO_O: TetriminoType([
         [0, 0, 0, 0],
         [0, 1, 1, 0],
         [0, 1, 1, 0],
         [0, 0, 0, 0],
     ],YELLOW);
     
-    const TETRIMINO_S: TetriminoType = ([
+    const TETRIMINO_S: TetriminoType([
         [0, 1, 1, 0],
         [0, 1, 0, 0],
         [0, 1, 0, 0],
         [0, 0, 0, 0],
     ],GREEN);
     
-    const TETRIMINO_T: TetriminoType = ([
+    const TETRIMINO_T: TetriminoType([
         [0, 1, 0, 0],
         [0, 1, 1, 0],
         [0, 1, 0, 0],
         [0, 0, 0, 0],
     ],PURPLE);
     
-    const TETRIMINO_Z: TetriminoType = ([
+    const TETRIMINO_Z: TetriminoType([
         [0, 1, 1, 0],
         [0, 0, 1, 0],
         [0, 0, 1, 0],
