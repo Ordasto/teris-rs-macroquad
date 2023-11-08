@@ -84,56 +84,56 @@ fn draw_tetrimino(tet: &TetriminoType, x: i32, y: i32, rot: i32) {
 // where the board starts
 const BOARD_POS: Vec2 = vec2(10.0, 10.0);
 
-#[rustfmt::skip]
-mod tetriminos {
+#[rustfmt::skip] // It hates consts on multiple lines, for some reason.
+mod tetriminos { // it's just in here so rustfmt doesn't turn the formatting to beans
     use macroquad::{color::*, color_u8};
     
-    struct TetriminoType([[i32; 4]; 4], Color);
+    pub struct TetriminoType(pub [[i32; 4]; 4], pub Color);
     const CYAN: Color = color_u8!(0, 255, 255, 255); // Guess ill do it myself
     
-    const TETRIMINO_I: TetriminoType([
+    const I: TetriminoType = TetriminoType([
         [0, 0, 0, 0],
         [1, 1, 1, 1],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
     ],CYAN);
     
-    const TETRIMINO_J: TetriminoType([
+    const J: TetriminoType = TetriminoType([
         [0, 0, 1, 0],
         [0, 0, 1, 0],
         [0, 1, 1, 0],
         [0, 0, 0, 0],
     ],BLUE);
     
-    const TETRIMINO_L: TetriminoType([
+    const L: TetriminoType = TetriminoType([
         [0, 1, 0, 0],
         [0, 1, 0, 0],
         [0, 1, 1, 0],
         [0, 0, 0, 0],
     ],ORANGE);
     
-    const TETRIMINO_O: TetriminoType([
+    const O: TetriminoType = TetriminoType([
         [0, 0, 0, 0],
         [0, 1, 1, 0],
         [0, 1, 1, 0],
         [0, 0, 0, 0],
     ],YELLOW);
     
-    const TETRIMINO_S: TetriminoType([
+    const S: TetriminoType = TetriminoType([
         [0, 1, 1, 0],
         [0, 1, 0, 0],
         [0, 1, 0, 0],
         [0, 0, 0, 0],
     ],GREEN);
     
-    const TETRIMINO_T: TetriminoType([
+    const T: TetriminoType = TetriminoType([
         [0, 1, 0, 0],
         [0, 1, 1, 0],
         [0, 1, 0, 0],
         [0, 0, 0, 0],
     ],PURPLE);
     
-    const TETRIMINO_Z: TetriminoType([
+    const Z: TetriminoType = TetriminoType([
         [0, 1, 1, 0],
         [0, 0, 1, 0],
         [0, 0, 1, 0],
