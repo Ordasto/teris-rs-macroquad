@@ -22,7 +22,6 @@ async fn main() {
         // Make normal tetris first
 
         draw_tetrimino(p, x, y);
-        draw_tetrimino_rot(p, x + 10, y + 10, 1);
 
         // my smol brain hasn't figured out yet how to have something run every 1/n seconds, or
         // whaterver
@@ -68,37 +67,23 @@ fn draw_tetrimino(tet: &TetriminoType, x: i32, y: i32) {
     }
 }
 
-// Does nothing different right now, just testing
-fn draw_tetrimino_rot(tet: &TetriminoType, x: i32, y: i32, rot: i32) {
-    for i in 0..16 {
-        if tet.0 as usize & 0b_1000_0000_0000_0000 >> i != 0 {
-            let x = (i % 4) + 1 + x; // + 1 to both to avoid zero indexing
-            let y = (i / 4) + 1 + y;
-
-            // this is probably pretty inefficient
-            draw_rectangle(
-                BOARD_POS.x * x as f32,
-                BOARD_POS.y * y as f32,
-                10.0,
-                10.0,
-                tet.1,
-            );
-        }
-    }
-}
-
+// where the board starts
 const BOARD_POS: Vec2 = vec2(10.0, 10.0);
 
-struct TetriminoType(u16, Color);
+struct TetriminoType([[i32; 4]; 4], Color);
 
-const PEICES: [&TetriminoType; 7] = [&I, &J, &L, &O, &S, &T, &Z];
+const TETRIMINO_I: [[i32; 4]; 4] = [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]];
+
+const TETRIMINO_J: [[i32; 3]; 3] = [[0, 0, 1], [1, 1, 1], [0, 0, 0]];
+
+const TETRIMINO_L: [[i32; 3]; 3] = [[1, 0, 0], [1, 1, 1], [0, 0, 0]];
+
+const TETRIMINO_O: [[i32; 2]; 2] = [[1, 1], [1, 1]];
+
+const TETRIMINO_S: [[i32; 3]; 3] = [[0, 1, 1], [1, 1, 0], [0, 0, 0]];
+
+const TETRIMINO_T: [[i32; 3]; 3] = [[0, 1, 0], [1, 1, 1], [0, 0, 0]];
+
+const TETRIMINO_Z: [[i32; 3]; 3] = [[1, 1, 0], [0, 1, 1], [0, 0, 0]];
 
 const CYAN: Color = color_u8!(0, 255, 255, 255); // Guess ill do it myself
-
-const I: TetriminoType = TetriminoType(0b_1000_1000_1000_1000, CYAN); // cyan,
-const J: TetriminoType = TetriminoType(0b_0100_0100_1100_0000, BLUE); // blue,
-const L: TetriminoType = TetriminoType(0b_1000_1000_1100_0000, ORANGE); // orange,
-const O: TetriminoType = TetriminoType(0b_1100_1100_0000_0000, YELLOW); // yellow,
-const S: TetriminoType = TetriminoType(0b_0110_1100_0000_0000, GREEN); // green,
-const T: TetriminoType = TetriminoType(0b_1110_0100_0000_0000, PURPLE); // purple,
-const Z: TetriminoType = TetriminoType(0b_1100_0110_0000_0000, RED); // red
