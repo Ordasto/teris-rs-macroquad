@@ -1,5 +1,10 @@
-use macroquad::{prelude::*, rand};
-use tetriminos::*;
+use macroquad::{models::Vertex, prelude::*, rand};
+
+mod tetriminos;
+pub use crate::tetriminos::peices::*;
+
+// where the board starts
+const BOARD_POS: Vec2 = vec2(10.0, 10.0);
 
 #[macroquad::main("tetris")]
 async fn main() {
@@ -22,7 +27,7 @@ async fn main() {
         // Gambling tetris
         // Make normal tetris first
 
-        draw_tetrimino(p, x, y);
+        draw_tetrimino(p, x, y, 0);
 
         // my smol brain hasn't figured out yet how to have something run every 1/n seconds, or
         // whaterver
@@ -32,7 +37,7 @@ async fn main() {
             // every 1/4 second
             time = 0.0;
             //             y += 1;
-            // p = PEICES[rand::gen_range(0, 7)];
+            p = PEICES[rand::gen_range(0, 7)];
         }
 
         //         if is_key_pressed(KeyCode::W) {}
@@ -71,72 +76,16 @@ async fn main() {
 // will probably need to draw each square seperatly as they need to disapear seperatly
 // further version could use textures with larger destinations sizes and move the active
 // tet into a board array when it hits something,
-fn draw_tetrimino(tet: &TetriminoType, x: i32, y: i32, rot: i32) {
-    let x = x as f32; // dont do this, just change the param
-    let y = y as f32;
+fn draw_tetrimino(tet: &TetriminoType, x: f32, y: f32, rot: i32) {
+    let mut y = y;
     for i in tet.0 {
+        let mut xt = x;
         for j in i {
-            draw_rectangle(x, y, 10.0, 10.0, tet.1);
+            if j != 0 {
+                draw_rectangle(xt * 10.0, y * 10.0, 10.0, 10.0, tet.1);
+            }
+            xt += 1.;
         }
+        y += 1.;
     }
-}
-
-// where the board starts
-const BOARD_POS: Vec2 = vec2(10.0, 10.0);
-
-#[rustfmt::skip] // It hates consts on multiple lines, for some reason.
-mod tetriminos { // it's just in here so rustfmt doesn't turn the formatting to beans
-    use macroquad::{color::*, color_u8};
-    
-    pub struct TetriminoType(pub [[i32; 4]; 4], pub Color);
-    const CYAN: Color = color_u8!(0, 255, 255, 255); // Guess ill do it myself
-    
-    const I: TetriminoType = TetriminoType([
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-    ],CYAN);
-    
-    const J: TetriminoType = TetriminoType([
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 1, 1, 0],
-        [0, 0, 0, 0],
-    ],BLUE);
-    
-    const L: TetriminoType = TetriminoType([
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 1, 1, 0],
-        [0, 0, 0, 0],
-    ],ORANGE);
-    
-    const O: TetriminoType = TetriminoType([
-        [0, 0, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 1, 0],
-        [0, 0, 0, 0],
-    ],YELLOW);
-    
-    const S: TetriminoType = TetriminoType([
-        [0, 1, 1, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 0, 0, 0],
-    ],GREEN);
-    
-    const T: TetriminoType = TetriminoType([
-        [0, 1, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 0, 0],
-        [0, 0, 0, 0],
-    ],PURPLE);
-    
-    const Z: TetriminoType = TetriminoType([
-        [0, 1, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 0],
-    ],RED);
 }
