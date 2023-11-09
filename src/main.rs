@@ -4,6 +4,7 @@ use macroquad::{prelude::*, rand};
 async fn main() {
     let mut y = 0;
     let mut x = 0;
+    let mut rot = 0;
     let mut time = 0.0;
     let mut p = PEICES[rand::gen_range(0, 7)];
     loop {
@@ -22,7 +23,7 @@ async fn main() {
         // Make normal tetris first
 
         draw_tetrimino(p, x, y);
-        draw_tetrimino_rot(p, x + 10, y + 10, 1);
+        draw_tetrimino_rot(p, x + 10, y + 10, rot % 4);
 
         // my smol brain hasn't figured out yet how to have something run every 1/n seconds, or
         // whaterver
@@ -34,11 +35,17 @@ async fn main() {
             //             y += 1;
             // p = PEICES[rand::gen_range(0, 7)];
         }
+        if is_key_pressed(KeyCode::R) {
+            p = PEICES[rand::gen_range(0, 7)];
+        }
 
-        //         if is_key_pressed(KeyCode::W) {}
+        if is_key_pressed(KeyCode::W) {
+            rot += 1;
+        }
         if is_key_pressed(KeyCode::S) {
             y += 1;
         }
+
         if is_key_pressed(KeyCode::A) {
             x -= 1;
         }
@@ -68,21 +75,28 @@ fn draw_tetrimino(tet: &TetriminoType, x: i32, y: i32) {
     }
 }
 
-// Does nothing different right now, just testing
+// get one rotation working, just need to figure the rest
 fn draw_tetrimino_rot(tet: &TetriminoType, x: i32, y: i32, rot: i32) {
+    let mut n = 3;
     for i in 0..16 {
-        if tet.0 as usize & 0b_1000_0000_0000_0000 >> i != 0 {
+        let val = 0b_1000_0000_0000_0000 >> (n % 17);
+        if tet.0 as usize & val != 0 {
             let x = (i % 4) + 1 + x; // + 1 to both to avoid zero indexing
             let y = (i / 4) + 1 + y;
 
             // this is probably pretty inefficient
             draw_rectangle(
-                BOARD_POS.x * x as f32,
-                BOARD_POS.y * y as f32,
+                BOARD_POS.x + (x * 10) as f32,
+                BOARD_POS.y + (y * 10) as f32,
                 10.0,
                 10.0,
                 tet.1,
             );
+        }
+        n += 4;
+        if i % 4 == 0 {
+            // we did it 4 times
+            n = 3 - i / 4; //
         }
     }
 }
