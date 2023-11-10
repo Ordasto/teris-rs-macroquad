@@ -1,7 +1,8 @@
 #[rustfmt::skip] // It hates consts on multiple lines, for some reason.
 pub mod peices { // it's just in here so rustfmt doesn't turn the formatting to beans
     use macroquad::{color::*, color_u8};
-    
+   
+    #[derive(Clone)]
     pub struct TetriminoType(pub [[i32; 4]; 4], pub Color);
     pub const PEICES: [&TetriminoType; 7] = [&I, &J, &L, &O, &S, &T, &Z];
    

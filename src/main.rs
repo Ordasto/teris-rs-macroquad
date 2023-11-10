@@ -1,4 +1,4 @@
-use macroquad::{models::Vertex, prelude::*, rand};
+use macroquad::{prelude::*, rand};
 
 mod tetriminos;
 pub use crate::tetriminos::peices::*;
@@ -8,10 +8,10 @@ const BOARD_POS: Vec2 = vec2(10.0, 10.0);
 
 #[macroquad::main("tetris")]
 async fn main() {
-    let mut y = 0;
-    let mut x = 0;
+    let mut y = 0.;
+    let mut x = 0.;
     let mut time = 0.0;
-    let mut p = PEICES[rand::gen_range(0, 7)];
+    let mut p = PEICES[rand::gen_range(0, 7)].clone();
     loop {
         clear_background(BLACK);
 
@@ -27,7 +27,7 @@ async fn main() {
         // Gambling tetris
         // Make normal tetris first
 
-        draw_tetrimino(p, x, y, 0);
+        draw_tetrimino(&p, x, y, 0);
 
         // my smol brain hasn't figured out yet how to have something run every 1/n seconds, or
         // whaterver
@@ -37,42 +37,47 @@ async fn main() {
             // every 1/4 second
             time = 0.0;
             //             y += 1;
-            p = PEICES[rand::gen_range(0, 7)];
         }
 
-        //         if is_key_pressed(KeyCode::W) {}
+        if is_key_pressed(KeyCode::R) {
+            p = PEICES[rand::gen_range(0, 7)].clone();
+        }
+
+        if is_key_pressed(KeyCode::W) {
+            p.0 = rotate(p.0);
+        }
         if is_key_pressed(KeyCode::S) {
-            y += 1;
+            y += 1.;
         }
         if is_key_pressed(KeyCode::A) {
-            x -= 1;
+            x -= 1.;
         }
         if is_key_pressed(KeyCode::D) {
-            x += 1;
+            x += 1.;
         }
         next_frame().await;
     }
 }
 
-// Could have a color overwrite Option<Color> Some() or tet.1
-// fn draw_tetrimino(tet: &TetriminoType, x: i32, y: i32) {
-//     for i in 0..16 {
-//         if tet.0 as usize & 0b_1000_0000_0000_0000 >> i != 0 {
-//             let x = (i % 4) + 1 + x; // + 1 to both to avoid zero indexing
-//             let y = (i / 4) + 1 + y;
-//
-//             // this is probably pretty inefficient
-//             draw_rectangle(
-//                 BOARD_POS.x * x as f32,
-//                 BOARD_POS.y * y as f32,
-//                 10.0,
-//                 10.0,
-//                 tet.1,
-//             );
-//         }
-//     }
-// }
+fn transpose(matrix: [[i32; 4]; 4]) -> [[i32; 4]; 4] {
+    let mut result = [[0; 4]; 4];
 
+    for i in 0..4 {
+        for j in 0..4 {
+            result[j][i] = matrix[i][j];
+        }
+    }
+
+    result
+}
+
+fn rotate(matrix: [[i32; 4]; 4]) -> [[i32; 4]; 4] {
+    let mut mat = transpose(matrix);
+    for i in (0..4) {
+        mat[i].reverse();
+    }
+    mat
+}
 // will probably need to draw each square seperatly as they need to disapear seperatly
 // further version could use textures with larger destinations sizes and move the active
 // tet into a board array when it hits something,
