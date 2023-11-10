@@ -37,23 +37,23 @@ pub mod peices { // it's just in here so rustfmt doesn't turn the formatting to 
     ],YELLOW);
     
     const S: TetriminoType = TetriminoType([
+        [0, 0, 0, 0],
         [0, 1, 1, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
+        [1, 1, 0, 0],
         [0, 0, 0, 0],
     ],GREEN);
     
     const T: TetriminoType = TetriminoType([
+        [0, 0, 0, 0],
         [0, 1, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 0, 0],
+        [1, 1, 1, 0],
         [0, 0, 0, 0],
     ],PURPLE);
     
     const Z: TetriminoType = TetriminoType([
+        [0, 0, 0, 0],
+        [1, 1, 0, 0],
         [0, 1, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
         [0, 0, 0, 0],
     ],RED);
 }
