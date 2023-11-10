@@ -6,7 +6,7 @@ async fn main() {
     let mut x = 0;
     let mut rot = 0;
     let mut time = 0.0;
-    let mut p = PEICES[rand::gen_range(0, 7)];
+    let mut p: TetriminoType = PEICES[rand::gen_range(0, 7)].clone();
     loop {
         clear_background(BLACK);
 
@@ -22,8 +22,7 @@ async fn main() {
         // Gambling tetris
         // Make normal tetris first
 
-        draw_tetrimino(p, x, y);
-        draw_tetrimino_rot(p, x + 10, y + 10, rot % 4);
+        draw_tetrimino(&p, x, y);
 
         // my smol brain hasn't figured out yet how to have something run every 1/n seconds, or
         // whaterver
@@ -36,11 +35,11 @@ async fn main() {
             // p = PEICES[rand::gen_range(0, 7)];
         }
         if is_key_pressed(KeyCode::R) {
-            p = PEICES[rand::gen_range(0, 7)];
+            p = PEICES[rand::gen_range(0, 7)].clone();
         }
 
         if is_key_pressed(KeyCode::W) {
-            rot += 1;
+            p.0 = rotate_tetrimino_brute(p.0);
         }
         if is_key_pressed(KeyCode::S) {
             y += 1;
@@ -75,7 +74,65 @@ fn draw_tetrimino(tet: &TetriminoType, x: i32, y: i32) {
     }
 }
 
-// get one rotation working, just need to figure the rest
+fn rotate_tetrimino_brute(tet: u16) -> u16 {
+    let mut output = 0;
+
+    // This is honestly the worst thing i've ever done,
+    // i'm so sorry, i could not be bothered to do the funny math stuff
+    set_bit_if(&mut output, tet, 0xF, 0xC);
+    set_bit_if(&mut output, tet, 0xE, 0x8);
+    set_bit_if(&mut output, tet, 0xD, 0x4);
+    set_bit_if(&mut output, tet, 0xC, 0x0);
+    set_bit_if(&mut output, tet, 0xB, 0xD);
+    set_bit_if(&mut output, tet, 0xA, 0x9);
+    set_bit_if(&mut output, tet, 0x9, 0x5);
+    set_bit_if(&mut output, tet, 0x8, 0x1);
+    set_bit_if(&mut output, tet, 0x7, 0xE);
+    set_bit_if(&mut output, tet, 0x6, 0xA);
+    set_bit_if(&mut output, tet, 0x5, 0x6);
+    set_bit_if(&mut output, tet, 0x4, 0x2);
+    set_bit_if(&mut output, tet, 0x3, 0xF);
+    set_bit_if(&mut output, tet, 0x2, 0xB);
+    set_bit_if(&mut output, tet, 0x1, 0x7);
+    set_bit_if(&mut output, tet, 0x0, 0x3);
+
+    output
+}
+
+/// Sets `set` bit in output if condition bit is set in target
+/// `set` and `condition` are indexex.
+/// i.e. `set = 1` would mean the 2nd bit (left to right + zero indexing)
+///
+fn set_bit_if(output: &mut u16, target: u16, condition: u8, set: u8) {
+    // move condition bit in target to last bit
+    // & 1 to get only the last bit
+    // then move it back to the set bit
+    *output |= ((target >> condition) & 1) << set;
+    //*output |= (target >> condition) << set;
+}
+
+// works but cuts off stuff,
+fn rotate_tetrimino(tet: u16) -> u16 {
+    let mut output = 0;
+    let mut n = 3;
+
+    for i in 0..16 {
+        let offset = 0b_1000_0000_0000_0000 >> (n % 17);
+
+        if tet as usize & offset != 0 {
+            output |= 0b_1000_0000_0000_0000 >> i;
+        }
+
+        n += 4;
+        if i % 4 == 0 {
+            // we did it 4 times
+            n = 3 - i / 4; //
+        }
+    }
+
+    output
+}
+
 fn draw_tetrimino_rot(tet: &TetriminoType, x: i32, y: i32, rot: i32) {
     let mut n = 3;
     for i in 0..16 {
@@ -103,6 +160,7 @@ fn draw_tetrimino_rot(tet: &TetriminoType, x: i32, y: i32, rot: i32) {
 
 const BOARD_POS: Vec2 = vec2(10.0, 10.0);
 
+#[derive(Clone)]
 struct TetriminoType(u16, Color);
 
 const PEICES: [&TetriminoType; 7] = [&I, &J, &L, &O, &S, &T, &Z];
